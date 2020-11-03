@@ -5,7 +5,13 @@ import com.taip.nextvision.soundControl.SoundControl;
 
 public class DirectionsEngine implements CommandEngine {
     SoundControl obj = new SoundControl();
-
+    private static DirectionsEngine instance = null;
+    private void DirectionsEngine(){}
+    
+    public static DirectionsEngine getInstance() { 
+        instance = new DirectionsEngine();
+        return instance;
+    }
     public CommandEngine mapsConnect() {
 //        boolean check = false;
 //
