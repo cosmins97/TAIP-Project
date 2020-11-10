@@ -6,6 +6,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.taip.nextvision.TelephonyEngine.CallEngine;
+import com.taip.nextvision.TelephonyEngine.SMSEngine;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,5 +42,29 @@ public class ExampleInstrumentedTest {
         CallEngine callEngine = new CallEngine(context);
         String number = callEngine.execute("call");
         assertEquals("07777777", number);
+    }
+
+    @Test
+    public void SMSEngine_newSms_Test(){
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        String lastSmsIndex;
+
+        SMSEngine smsEngine = new SMSEngine(context);
+
+        lastSmsIndex = smsEngine.execute("new sms");
+        assertEquals(lastSmsIndex, "1");
+        lastSmsIndex = smsEngine.execute("new sms");
+        assertEquals(lastSmsIndex, "2");
+    }
+
+    @Test
+    public void SMSEngine_newSms_Test_Fail(){
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        String lastSmsIndex;
+
+        SMSEngine smsEngine = new SMSEngine(context);
+
+        lastSmsIndex = smsEngine.execute("new sms");
+        assertEquals(lastSmsIndex, "5");
     }
 }
