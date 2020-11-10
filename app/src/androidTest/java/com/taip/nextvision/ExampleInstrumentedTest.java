@@ -7,6 +7,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.taip.nextvision.BatteryEngine.BatteryEngine;
 import com.taip.nextvision.TelephonyEngine.CallEngine;
+import com.taip.nextvision.TimeEngine.DateEngine;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,4 +61,31 @@ public class ExampleInstrumentedTest {
         assertEquals(0, charge);
     }
 
+    @Test
+    public void testDate() {
+        //andra
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        DateEngine dateEngine = new DateEngine(context);
+        String testCmd = "data";
+        String date = dateEngine.execute(testCmd);
+        assertEquals("10/11/2020", date);
+    }
+
+    @Test
+    public void testDateFail() {
+        //andra
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        DateEngine dateEngine = new DateEngine(context);
+        String date = dateEngine.execute("");
+        assertEquals("10/11/2021", date);
+    }
+
+//    @Test
+//    //andra
+//    public void testTime(){
+//        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+//        TimeEngine timeEngine = new TimeEngine(context);
+//        String date = timeEngine.execute("time");
+//        //assert();
+//    }
 }

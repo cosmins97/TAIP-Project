@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.taip.nextvision.TelephonyEngine.CallEngine;
 import com.taip.nextvision.TelephonyEngine.SMSEngine;
+import com.taip.nextvision.TimeEngine.DateEngine;
+import com.taip.nextvision.TimeEngine.TimeEngine;
 import com.taip.nextvision.directions.DirectionsEngine;
 
 public class CommandDispatcher {
@@ -14,13 +16,16 @@ public class CommandDispatcher {
         } else if (cmd == "sms") {
             commandEngine = new SMSEngine(context);
         } else if (cmd == "directii") {
-            commandEngine = new DirectionsEngine().mapsConnect();
+            commandEngine = new DirectionsEngine(context);
         } else if (cmd == "de la") {
-            commandEngine = new DirectionsEngine().firstLocation();
+            commandEngine = new DirectionsEngine(context);
         } else if (cmd == "pana la") {
-            commandEngine = new DirectionsEngine().secondLocation();
-        }
-        else {
+            commandEngine = new DirectionsEngine(context);
+        } else if (cmd == "data") {
+            commandEngine = new DateEngine(context);
+        } else if (cmd == "timp") {
+            commandEngine = new TimeEngine(context);
+        } else {
             return "Nu am inteles comanda";
         }
 
