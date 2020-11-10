@@ -1,12 +1,14 @@
 package com.taip.nextvision;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.taip.nextvision.GoogleVoiceSpeech.GoogleVoiceSpeech;
 
 public class MainActivity extends AppCompatActivity {
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,4 +27,5 @@ public class MainActivity extends AppCompatActivity {
             speech.textToSpeech(answer);
         }
     }
+
 }

@@ -19,7 +19,8 @@ public class CommandDispatcher {
             commandEngine = new DirectionsEngine().firstLocation();
         } else if (cmd == "pana la") {
             commandEngine = new DirectionsEngine().secondLocation();
-        } else {
+        }
+        else {
             return "Nu am inteles comanda";
         }
 

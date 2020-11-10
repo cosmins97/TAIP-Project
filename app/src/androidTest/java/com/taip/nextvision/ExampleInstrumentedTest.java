@@ -2,15 +2,16 @@ package com.taip.nextvision;
 
 import android.content.Context;
 
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.taip.nextvision.BatteryEngine.BatteryEngine;
 import com.taip.nextvision.TelephonyEngine.CallEngine;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -42,4 +43,21 @@ public class ExampleInstrumentedTest {
         String number = callEngine.execute("call");
         assertEquals("07777777", number);
     }
+
+    @Test
+    public void check_battery_percentage() {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        BatteryEngine batteryEngine = new BatteryEngine(context);
+        int percent = batteryEngine.exec("battery");
+        assertEquals(100, percent);
+    }
+
+    @Test
+    public void check_is_charging() {
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        BatteryEngine batteryEngine = new BatteryEngine(context);
+        int charge = batteryEngine.exec("cahrge");
+        assertEquals(0, charge);
+    }
+
 }
