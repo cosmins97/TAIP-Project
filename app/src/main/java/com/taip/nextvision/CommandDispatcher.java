@@ -12,7 +12,7 @@ public class CommandDispatcher {
         if (cmd == "suna") {
             commandEngine = new CallEngine(context);
         } else if (cmd == "sms") {
-            commandEngine = new SMSEngine();
+            commandEngine = new SMSEngine(context);
         } else if (cmd == "directii") {
             commandEngine = new DirectionsEngine().mapsConnect();
         } else if (cmd == "de la") {
