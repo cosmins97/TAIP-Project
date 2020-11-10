@@ -8,6 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.taip.nextvision.BatteryEngine.BatteryEngine;
 import com.taip.nextvision.TelephonyEngine.CallEngine;
 import com.taip.nextvision.TimeEngine.DateEngine;
+import com.taip.nextvision.TelephonyEngine.SMSEngine;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,4 +89,28 @@ public class ExampleInstrumentedTest {
 //        String date = timeEngine.execute("time");
 //        //assert();
 //    }
+    
+    @Test
+    public void SMSEngine_newSms_Test(){
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        String lastSmsIndex;
+
+        SMSEngine smsEngine = new SMSEngine(context);
+
+        lastSmsIndex = smsEngine.execute("new sms");
+        assertEquals(lastSmsIndex, "1");
+        lastSmsIndex = smsEngine.execute("new sms");
+        assertEquals(lastSmsIndex, "2");
+    }
+
+    @Test
+    public void SMSEngine_newSms_Test_Fail(){
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        String lastSmsIndex;
+
+        SMSEngine smsEngine = new SMSEngine(context);
+
+        lastSmsIndex = smsEngine.execute("new sms");
+        assertEquals(lastSmsIndex, "5");
+    }
 }
