@@ -21,8 +21,11 @@ public class CallEngine implements CommandEngine {
     @Override
     public String execute(String cmd) {
         Telephony telephony = Telephony.getInstance();
-        if (cmd == "") {
-            this.callContact(telephony, "vlad");
+        if (cmd == "call") {
+            return this.callContact(telephony, "vlad");
+        }
+        if (cmd == "create") {
+            return this.createNewContact("vlad", "07777777");
         }
         return "Nu am inteles comanda";
     }
@@ -39,13 +42,13 @@ public class CallEngine implements CommandEngine {
 
         if (cursor.moveToFirst()) {
             do {
-                if (cursor.getString(idxName).equals("YOUR CONTACT NAME")) {
-                    cursor.getString(idxNumber);
+                if (cursor.getString(idxName).equals(name)) {
+                    return cursor.getString(idxNumber);
                 }
             } while (cursor.moveToNext());
         }
         cursor.close();
-        return "";
+        return "Nu a fost gasit";
     }
 
     private String createNewContact(String name, String number) {
