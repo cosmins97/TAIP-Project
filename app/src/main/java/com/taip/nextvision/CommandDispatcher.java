@@ -1,14 +1,16 @@
 package com.taip.nextvision;
 
+import android.content.Context;
+
 import com.taip.nextvision.TelephonyEngine.CallEngine;
 import com.taip.nextvision.TelephonyEngine.SMSEngine;
 import com.taip.nextvision.directions.DirectionsEngine;
 
 public class CommandDispatcher {
-    public String dispatch(String cmd) {
+    public String dispatch(Context context, String cmd) {
         CommandEngine commandEngine;
         if (cmd == "suna") {
-            commandEngine = new CallEngine();
+            commandEngine = new CallEngine(context);
         } else if (cmd == "sms") {
             commandEngine = new SMSEngine();
         } else if (cmd == "directii") {

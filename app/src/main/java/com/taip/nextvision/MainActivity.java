@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
             if (cmd.isEmpty()) {
                 speech.textToSpeech("Incearca din nou");
             }
-            String answer = commandDispatcher.dispatch(cmd);
+            String answer = commandDispatcher.dispatch(getApplicationContext(), cmd);
             speech.textToSpeech(answer);
         }
     }
