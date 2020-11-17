@@ -1,13 +1,19 @@
 package com.taip.nextvision;
 
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.taip.nextvision.GoogleVoiceSpeech.GoogleVoiceSpeech;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
+    TextToSpeech test;
+    Button buttonTestOn, buttonTestOff;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -28,8 +34,26 @@ public class MainActivity extends AppCompatActivity {
 //            System.out.println("Unable");
 //        }
 
+
+        test = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    test.setLanguage(Locale.UK);
+                }
+            }
+        });
+
+        buttonTestOn = (Button)findViewById(R.id.micOn);
+        buttonTestOff = (Button)findViewById(R.id.micOff);
+
+
+
+
+
         SpeechEngine speech = new GoogleVoiceSpeech();
         CommandDispatcher commandDispatcher = new CommandDispatcher();
+
 
 //        while (true) {
 //            String cmd = speech.speechToText();
@@ -39,5 +63,6 @@ public class MainActivity extends AppCompatActivity {
 //            String answer = commandDispatcher.dispatch(getApplicationContext(), cmd);
 //            speech.textToSpeech(answer);
 //        }
+
     }
 }

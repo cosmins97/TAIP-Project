@@ -22,6 +22,7 @@ public class DateEngine implements CommandEngine {
         }
         return "Nu e buna comanda de data";
     }
+
     public String checkDate(DateTime dateTime){
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
