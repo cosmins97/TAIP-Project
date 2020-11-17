@@ -31,13 +31,13 @@ public class MainActivity extends AppCompatActivity {
         SpeechEngine speech = new GoogleVoiceSpeech();
         CommandDispatcher commandDispatcher = new CommandDispatcher();
 
-        while (true) {
-            String cmd = speech.speechToText();
-            if (cmd.isEmpty()) {
-                speech.textToSpeech("Incearca din nou");
-            }
-            String answer = commandDispatcher.dispatch(getApplicationContext(), cmd);
-            speech.textToSpeech(answer);
-        }
+//        while (true) {
+//            String cmd = speech.speechToText();
+//            if (cmd == "") {
+//                speech.textToSpeech("Incearca din nou");
+//            }
+//            String answer = commandDispatcher.dispatch(getApplicationContext(), cmd);
+//            speech.textToSpeech(answer);
+//        }
     }
 }
