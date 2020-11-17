@@ -1,8 +1,11 @@
 package com.taip.nextvision;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextToSpeech test;
     Button buttonTestOn, buttonTestOff;
+    MediaPlayer testMedia;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -46,8 +50,33 @@ public class MainActivity extends AppCompatActivity {
 
         buttonTestOn = (Button)findViewById(R.id.micOn);
         buttonTestOff = (Button)findViewById(R.id.micOff);
+        //testMedia = MediaPlayer.create(this, R.raw.sound);
 
+//        testMedia.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//            public void onCompletion(MediaPlayer mp) {
+//                testMedia.reset();
+//                testMedia.release();
+//                testMedia = MediaPlayer.create(context, R.raw.sound);
+//            }
+//        });
 
+        buttonTestOn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //testMedia.start();
+                String toSpeak = "Mic is On";
+                Toast.makeText(getApplicationContext(), toSpeak,Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        buttonTestOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //testMedia.start();
+                String toSpeak = "Mic is Off";
+                Toast.makeText(getApplicationContext(), toSpeak,Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
 
