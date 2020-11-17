@@ -1,5 +1,6 @@
 package com.taip.nextvision;
 
+import android.Manifest;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -14,15 +15,31 @@ import com.taip.nextvision.GoogleVoiceSpeech.GoogleVoiceSpeech;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    String[] permissions = {
+            Manifest.permission.RECORD_AUDIO
+    };
 
     TextToSpeech test;
     Button buttonTestOn, buttonTestOff;
     MediaPlayer testMedia;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        PermissionManager.initInstance(this, permissions);
+        CommandDispatcher commandDispatcher = new CommandDispatcher();
+        SpeechEngine speech = new GoogleVoiceSpeech(this);
+
+//        while (true) {
+//            String cmd = speech.speechToText();
+//            if (cmd == "") {
+//                speech.textToSpeech("Incearca din nou");
+//            }
+//            String answer = commandDispatcher.dispatch(getApplicationContext(), cmd);
+//            speech.textToSpeech(answer);
+//        }
 
 //        DirectionsEngine mGPS = new DirectionsEngine(this);
 //        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -38,18 +55,8 @@ public class MainActivity extends AppCompatActivity {
 //            System.out.println("Unable");
 //        }
 
-
-        test = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR) {
-                    test.setLanguage(Locale.UK);
-                }
-            }
-        });
-
-        buttonTestOn = (Button)findViewById(R.id.micOn);
-        buttonTestOff = (Button)findViewById(R.id.micOff);
+        buttonTestOn = (Button) findViewById(R.id.micOn);
+        buttonTestOff = (Button) findViewById(R.id.micOff);
         //testMedia = MediaPlayer.create(this, R.raw.sound);
 
 //        testMedia.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -63,35 +70,21 @@ public class MainActivity extends AppCompatActivity {
         buttonTestOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                speech.startListening();
                 //testMedia.start();
                 String toSpeak = "Mic is On";
-                Toast.makeText(getApplicationContext(), toSpeak,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
             }
         });
 
         buttonTestOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                speech.stopListening();
                 //testMedia.start();
                 String toSpeak = "Mic is Off";
-                Toast.makeText(getApplicationContext(), toSpeak,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-        SpeechEngine speech = new GoogleVoiceSpeech();
-        CommandDispatcher commandDispatcher = new CommandDispatcher();
-
-
-//        while (true) {
-//            String cmd = speech.speechToText();
-//            if (cmd == "") {
-//                speech.textToSpeech("Incearca din nou");
-//            }
-//            String answer = commandDispatcher.dispatch(getApplicationContext(), cmd);
-//            speech.textToSpeech(answer);
-//        }
-
     }
 }

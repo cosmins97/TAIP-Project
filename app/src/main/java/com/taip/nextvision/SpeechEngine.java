@@ -1,7 +1,10 @@
 package com.taip.nextvision;
 
 public interface SpeechEngine {
-    public String speechToText();
+    public void startListening();
+
+    public void stopListening();
+
 
     public void textToSpeech(String text);
 }
