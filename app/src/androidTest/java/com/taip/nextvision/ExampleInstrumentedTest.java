@@ -94,4 +94,55 @@ public class ExampleInstrumentedTest {
         Log.d("HELLO DELETE ALARM!!", setAlarm);
         assertEquals("Deleted", setAlarm);
     }
+    @Test
+    public void testDate() {
+        //andra
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        DateEngine dateEngine = new DateEngine(context);
+        String testCmd = "data";
+        String date = dateEngine.execute(testCmd);
+        assertEquals("10/11/2020", date);
+    }
+
+    @Test
+    public void testDateFail() {
+        //andra
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        DateEngine dateEngine = new DateEngine(context);
+        String date = dateEngine.execute("");
+        assertEquals("10/11/2021", date);
+    }
+
+//    @Test
+//    //andra
+//    public void testTime(){
+//        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+//        TimeEngine timeEngine = new TimeEngine(context);
+//        String date = timeEngine.execute("time");
+//        //assert();
+//    }
+
+    @Test
+    public void SMSEngine_newSms_Test(){
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        String lastSmsIndex;
+
+        SMSEngine smsEngine = new SMSEngine(context);
+
+        lastSmsIndex = smsEngine.execute("new sms");
+        assertEquals(lastSmsIndex, "1");
+        lastSmsIndex = smsEngine.execute("new sms");
+        assertEquals(lastSmsIndex, "2");
+    }
+
+    @Test
+    public void SMSEngine_newSms_Test_Fail(){
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        String lastSmsIndex;
+
+        SMSEngine smsEngine = new SMSEngine(context);
+
+        lastSmsIndex = smsEngine.execute("new sms");
+        assertEquals(lastSmsIndex, "5");
+    }
 }
