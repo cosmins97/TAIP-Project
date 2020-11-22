@@ -1,11 +1,14 @@
 package com.taip.nextvision.GoogleVoiceSpeech;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresPermission;
 
 import com.taip.nextvision.MainActivity;
 import com.taip.nextvision.SpeechEngine;
@@ -20,6 +23,7 @@ public class GoogleVoiceSpeech implements SpeechEngine {
     SpeechRecognizer speechRecognizer;
     final Intent speechRecognizerIntent;
 
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     public GoogleVoiceSpeech(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         this.speechRecognizer = SpeechRecognizer.createSpeechRecognizer(mainActivity);
@@ -76,11 +80,13 @@ public class GoogleVoiceSpeech implements SpeechEngine {
 
     @Override
     @DebugLog
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     public void startListening() {
         speechRecognizer.startListening(speechRecognizerIntent);
     }
 
     @Override
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     public void stopListening() {
         speechRecognizer.stopListening();
     }

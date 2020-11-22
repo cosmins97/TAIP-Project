@@ -8,8 +8,8 @@ import androidx.core.content.ContextCompat;
 
 public class PermissionManager {
     private static PermissionManager instance = null;
-    MainActivity mainActivity;
-    String[] permissions;
+    private MainActivity mainActivity;
+    private String[] permissions;
 
     public static void initInstance(MainActivity mainActivity, String[] permissions) {
         if (instance == null) {
@@ -32,7 +32,7 @@ public class PermissionManager {
         }
     }
 
-    private void checkPermission(String permission) {
+    public void checkPermission(String permission) {
         if (ContextCompat.checkSelfPermission(mainActivity, permission) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 ActivityCompat.requestPermissions(mainActivity, new String[]{permission}, 0);

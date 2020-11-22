@@ -30,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
 
         PermissionManager.initInstance(this, permissions);
         CommandDispatcher commandDispatcher = new CommandDispatcher();
+        try {
+            PermissionManager.getInstance().checkPermission(Manifest.permission.RECORD_AUDIO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         SpeechEngine speech = new GoogleVoiceSpeech(this);
 
 //        while (true) {
