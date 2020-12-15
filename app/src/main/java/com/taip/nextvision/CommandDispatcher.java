@@ -1,6 +1,7 @@
 package com.taip.nextvision;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.taip.nextvision.TelephonyEngine.CallEngine;
 import com.taip.nextvision.TelephonyEngine.SMSEngine;
@@ -10,6 +11,7 @@ import com.taip.nextvision.directions.DirectionsEngine;
 
 public class CommandDispatcher {
     public String dispatch(Context context, String cmd) {
+        Toast.makeText(context, cmd, Toast.LENGTH_SHORT).show();
         CommandEngine commandEngine;
         if (cmd == "suna") {
             commandEngine = new CallEngine(context);

@@ -8,26 +8,48 @@
     android:visibility="visible"
     tools:context=".MainActivity">
 
+    <EditText
+        android:id="@+id/commandInputId"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="120dp"
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/micOn"
         android:layout_width="0dp"
-        android:layout_height="263dp"
+        android:layout_height="0dp"
         android:text="Mic On"
         android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/commandInputId"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/micOff"
         android:layout_width="0dp"
-        android:layout_height="265dp"
+        android:layout_height="0dp"
         android:text="Mic Off"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/micOn" />
+        app:layout_constraintTop_toBottomOf="@+id/commandInputId" />
+
+    <Button
+        android:id="@+id/runCommandId"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="Run"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

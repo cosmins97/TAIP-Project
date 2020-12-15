@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
     };
 
     TextToSpeech test;
-    Button buttonTestOn, buttonTestOff;
+    Button buttonTestOn, buttonTestOff, runCommandButton;
+    TextView commandInput;
     MediaPlayer testMedia;
 
     @Override
@@ -89,6 +91,15 @@ public class MainActivity extends AppCompatActivity {
                 //testMedia.start();
                 String toSpeak = "Mic is Off";
                 Toast.makeText(getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        commandInput = (TextView) findViewById(R.id.commandInputId);
+        runCommandButton = (Button) findViewById(R.id.runCommandId);
+        runCommandButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commandDispatcher.dispatch(getApplicationContext(), commandInput.getText().toString());
             }
         });
     }
