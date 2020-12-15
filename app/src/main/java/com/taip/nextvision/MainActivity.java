@@ -10,8 +10,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.taip.nextvision.GoogleVoiceSpeech.GoogleVoiceSpeech;
-
 
 public class MainActivity extends AppCompatActivity {
     String[] permissions = {
@@ -27,6 +25,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        buttonTestOn = (Button) findViewById(R.id.micOn);
+        buttonTestOff = (Button) findViewById(R.id.micOff);
+        //testMedia = MediaPlayer.create(this, R.raw.sound);
+
+
         PermissionManager.initInstance(this, permissions);
         CommandDispatcher commandDispatcher = new CommandDispatcher();
         try {
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        SpeechEngine speech = new GoogleVoiceSpeech(this);
+        SpeechEngine.init(this, buttonTestOn, buttonTestOff);
 
 
 //        DirectionsEngine mGPS = new DirectionsEngine(this);
@@ -51,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
 //            System.out.println("Unable");
 //        }
 
-        buttonTestOn = (Button) findViewById(R.id.micOn);
-        buttonTestOff = (Button) findViewById(R.id.micOff);
-        //testMedia = MediaPlayer.create(this, R.raw.sound);
 
 //        testMedia.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 //            public void onCompletion(MediaPlayer mp) {
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         buttonTestOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speech.startListening();
+                SpeechEngine.startListening();
                 //testMedia.start();
                 String toSpeak = "Mic is On";
                 Toast.makeText(getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         buttonTestOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speech.stopListening();
+                SpeechEngine.stopListening();
                 //testMedia.start();
                 String toSpeak = "Mic is Off";
                 Toast.makeText(getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
