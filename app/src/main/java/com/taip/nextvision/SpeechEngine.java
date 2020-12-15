@@ -5,6 +5,5 @@ public interface SpeechEngine {
 
     public void stopListening();
 
-
     public void textToSpeech(String text);
 }

@@ -3,7 +3,6 @@ package com.taip.nextvision;
 import android.Manifest;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,14 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.taip.nextvision.GoogleVoiceSpeech.GoogleVoiceSpeech;
 
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     String[] permissions = {
             Manifest.permission.RECORD_AUDIO
     };
 
-    TextToSpeech test;
     Button buttonTestOn, buttonTestOff, runCommandButton;
     TextView commandInput;
     MediaPlayer testMedia;
@@ -39,14 +36,6 @@ public class MainActivity extends AppCompatActivity {
         }
         SpeechEngine speech = new GoogleVoiceSpeech(this);
 
-//        while (true) {
-//            String cmd = speech.speechToText();
-//            if (cmd == "") {
-//                speech.textToSpeech("Incearca din nou");
-//            }
-//            String answer = commandDispatcher.dispatch(getApplicationContext(), cmd);
-//            speech.textToSpeech(answer);
-//        }
 
 //        DirectionsEngine mGPS = new DirectionsEngine(this);
 //        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);

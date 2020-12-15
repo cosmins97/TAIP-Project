@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresPermission;
@@ -14,18 +15,35 @@ import com.taip.nextvision.MainActivity;
 import com.taip.nextvision.SpeechEngine;
 
 import java.util.ArrayList;
-import java.util.function.Function;
+import java.util.Locale;
 
 import hugo.weaving.DebugLog;
 
 public class GoogleVoiceSpeech implements SpeechEngine {
+    static GoogleVoiceSpeech instance;
     MainActivity mainActivity;
     SpeechRecognizer speechRecognizer;
     final Intent speechRecognizerIntent;
+    static TextToSpeech tts;
+
+    public static GoogleVoiceSpeech getInstance() {
+        return instance;
+    }
 
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     public GoogleVoiceSpeech(MainActivity mainActivity) {
+        instance = this;
         this.mainActivity = mainActivity;
+
+        tts = new TextToSpeech(mainActivity, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    tts.setLanguage(new Locale("ro-RO"));
+                }
+            }
+        });
+
         this.speechRecognizer = SpeechRecognizer.createSpeechRecognizer(mainActivity);
         this.speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -94,6 +112,6 @@ public class GoogleVoiceSpeech implements SpeechEngine {
     @Override
     @DebugLog
     public void textToSpeech(String text) {
-
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
 }
