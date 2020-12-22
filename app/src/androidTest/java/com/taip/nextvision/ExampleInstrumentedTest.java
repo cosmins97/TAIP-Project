@@ -6,15 +6,11 @@ import android.util.Log;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.taip.nextvision.AlarmEngine.AlarmEngine;
 import com.taip.nextvision.BatteryEngine.BatteryEngine;
 import com.taip.nextvision.TelephonyEngine.CallEngine;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.Calendar;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
@@ -53,7 +49,7 @@ public class ExampleInstrumentedTest {
     public void check_battery_percentage() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         BatteryEngine batteryEngine = new BatteryEngine(context);
-        String percent = batteryEngine.execute("battery");
+        String percent = batteryEngine.execute("baterie");
         assertEquals("100", percent);
     }
 
@@ -61,7 +57,7 @@ public class ExampleInstrumentedTest {
     public void check_is_charging() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         BatteryEngine batteryEngine = new BatteryEngine(context);
-        String charge = batteryEngine.execute("charge");
+        String charge = batteryEngine.execute("incarca");
         Log.d("HELLO!!",charge);
         assertEquals("No", charge);
     }
@@ -70,79 +66,79 @@ public class ExampleInstrumentedTest {
     public void check_if_battery_is_saving_mode() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         BatteryEngine batteryEngine = new BatteryEngine(context);
-        String saveMode = batteryEngine.execute("CheckBatteryMode");
+        String saveMode = batteryEngine.execute("mod baterie");
         Log.d("HELLO SAVE MODE!!", saveMode);
         assertEquals("No", saveMode);
     }
 
-    @Test
-    public void check_set_alarm() {
-        Date currentTime = Calendar.getInstance().getTime();
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        AlarmEngine alarmEngine = new AlarmEngine(context);
-        String setAlarm = alarmEngine.execute("set alarm", currentTime);
-        Log.d("HELLO SET ALARM!!", setAlarm);
-        assertEquals("Created", setAlarm);
-    }
-
-    @Test
-    public void check_delete_alarm() {
-        Date currentTime = Calendar.getInstance().getTime();
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        AlarmEngine alarmEngine = new AlarmEngine(context);
-        String setAlarm = alarmEngine.execute("delete alarm", currentTime);
-        Log.d("HELLO DELETE ALARM!!", setAlarm);
-        assertEquals("Deleted", setAlarm);
-    }
-    @Test
-    public void testDate() {
-        //andra
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        DateEngine dateEngine = new DateEngine(context);
-        String testCmd = "data";
-        String date = dateEngine.execute(testCmd);
-        assertEquals("10/11/2020", date);
-    }
-
-    @Test
-    public void testDateFail() {
-        //andra
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        DateEngine dateEngine = new DateEngine(context);
-        String date = dateEngine.execute("");
-        assertEquals("10/11/2021", date);
-    }
-
 //    @Test
-//    //andra
-//    public void testTime(){
+//    public void check_set_alarm() {
+//        Date currentTime = Calendar.getInstance().getTime();
 //        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-//        TimeEngine timeEngine = new TimeEngine(context);
-//        String date = timeEngine.execute("time");
-//        //assert();
+//        AlarmEngine alarmEngine = new AlarmEngine(context);
+//        String setAlarm = alarmEngine.execute("seteaza alarma", currentTime);
+//        Log.d("HELLO SET ALARM!!", setAlarm);
+//        assertEquals("Created", setAlarm);
 //    }
-
-    @Test
-    public void SMSEngine_newSms_Test(){
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        String lastSmsIndex;
-
-        SMSEngine smsEngine = new SMSEngine(context);
-
-        lastSmsIndex = smsEngine.execute("new sms");
-        assertEquals(lastSmsIndex, "1");
-        lastSmsIndex = smsEngine.execute("new sms");
-        assertEquals(lastSmsIndex, "2");
-    }
-
-    @Test
-    public void SMSEngine_newSms_Test_Fail(){
-        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        String lastSmsIndex;
-
-        SMSEngine smsEngine = new SMSEngine(context);
-
-        lastSmsIndex = smsEngine.execute("new sms");
-        assertEquals(lastSmsIndex, "5");
-    }
+//
+//    @Test
+//    public void check_delete_alarm() {
+//        Date currentTime = Calendar.getInstance().getTime();
+//        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+//        AlarmEngine alarmEngine = new AlarmEngine(context);
+//        String setAlarm = alarmEngine.execute("sterge alarma", currentTime);
+//        Log.d("HELLO DELETE ALARM!!", setAlarm);
+//        assertEquals("Deleted", setAlarm);
+//    }
+//    @Test
+//    public void testDate() {
+//        //andra
+//        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+//        DateEngine dateEngine = new DateEngine(context);
+//        String testCmd = "data";
+//        String date = dateEngine.execute(testCmd);
+//        assertEquals("10/11/2020", date);
+//    }
+//
+//    @Test
+//    public void testDateFail() {
+//        //andra
+//        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+//        DateEngine dateEngine = new DateEngine(context);
+//        String date = dateEngine.execute("");
+//        assertEquals("10/11/2021", date);
+//    }
+//
+////    @Test
+////    //andra
+////    public void testTime(){
+////        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+////        TimeEngine timeEngine = new TimeEngine(context);
+////        String date = timeEngine.execute("time");
+////        //assert();
+////    }
+//
+//    @Test
+//    public void SMSEngine_newSms_Test(){
+//        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+//        String lastSmsIndex;
+//
+//        SMSEngine smsEngine = new SMSEngine(context);
+//
+//        lastSmsIndex = smsEngine.execute("new sms");
+//        assertEquals(lastSmsIndex, "1");
+//        lastSmsIndex = smsEngine.execute("new sms");
+//        assertEquals(lastSmsIndex, "2");
+//    }
+//
+//    @Test
+//    public void SMSEngine_newSms_Test_Fail(){
+//        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+//        String lastSmsIndex;
+//
+//        SMSEngine smsEngine = new SMSEngine(context);
+//
+//        lastSmsIndex = smsEngine.execute("new sms");
+//        assertEquals(lastSmsIndex, "5");
+//    }
 }

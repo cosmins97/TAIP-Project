@@ -18,13 +18,13 @@ public class BatteryEngine implements CommandEngine {
 
     @Override
     public String execute(String cmd) {
-        if (cmd == "battery") {
+        if (cmd.equals("baterie")) {
             return this.checkBatteryPercentage();
         }
-        if( cmd == "charge"){
+        if( cmd.equals("incarca")){
             return this.isCharging();
         }
-        if( cmd == "CheckBatteryMode"){
+        if( cmd.equals("mod economisire")){
             return this.checkBatteryMode();
         }
         return "Command not valid!";
