@@ -11,13 +11,11 @@ import com.taip.nextvision.directions.DirectionsEngine;
 
 public class CommandDispatcher {
     public String dispatch(Context context, String cmd) {
-//        Toast.makeText(context, cmd, Toast.LENGTH_SHORT).show();
-//        SpeechEngine.textToSpeech(cmd);
         Toast.makeText(context, cmd, Toast.LENGTH_SHORT).show();
 
         CommandEngine commandEngine;
         String result = "";
-        if (cmd.equals("suna") || cmd.equals("creeaza")) {
+        if (cmd.equals("suna andra") || cmd.equals("creeaza andra") || cmd.equals("apeleaza cristi 07777773")) {
             commandEngine = new CallEngine(context);
             result = commandEngine.execute(cmd);
         } else if (cmd.equals("sms")) {

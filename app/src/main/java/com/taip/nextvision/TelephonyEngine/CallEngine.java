@@ -21,23 +21,25 @@ public class CallEngine implements CommandEngine {
     @Override
     public String execute(String cmd) {
         Telephony telephony = Telephony.getInstance();
-        if (cmd.equals("suna")) {
-            return this.callContact("andra");
+        if (cmd.equals("suna andra") || cmd.equals("apeleaza andra")) {
+            String[] splited = cmd.split("\\s+");
+            return this.callContact(splited[1]);
         }
-        if (cmd.equals("creeaza")) {
-            return this.createNewContact("andra", "07777772");
+        if (cmd.equals("creeaza cristi 07777773")) {
+            String[] splited = cmd.split("\\s+");
+            return this.createNewContact(splited[1], splited[2]);
         }
         return "Nu am inteles comanda";
     }
 
     private String callContact(String person) {
         if (person.startsWith("07"))
-            return checkContactExistance(person, "call number");
+            return checkContactExistence(person, "call number");
         else
-            return checkContactExistance(person, "call person");
+            return checkContactExistence(person, "call person");
     }
 
-    private String checkContactExistance (String check, String mode)
+    private String checkContactExistence (String check, String mode)
     {
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
         String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
@@ -92,8 +94,8 @@ public class CallEngine implements CommandEngine {
     }
 
     private String createNewContact(String name, String number) {
-        if (checkContactExistance(name, "create name") == "no") {
-            if (checkContactExistance(number, "create number") == "no") {
+        if (checkContactExistence(name, "create name") == "no") {
+            if (checkContactExistence(number, "create number") == "no") {
                 ArrayList<ContentProviderOperation> contact = new ArrayList<ContentProviderOperation>();
                 contact.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
                         .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
@@ -113,7 +115,6 @@ public class CallEngine implements CommandEngine {
                         .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
                         .build());
 
-
                 try {
                     ContentProviderResult[] results = this.context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, contact);
                     return "Numarul a fost salvat";
@@ -128,7 +129,11 @@ public class CallEngine implements CommandEngine {
     }
 
     private String callUnknownNumber(String number) {
-
-        return number;
+        String result = "";
+        for (int i = 0; i < number.length(); i++)
+        {
+            result += number.charAt(i) + " ";
+        }
+        return result;
     }
 }
