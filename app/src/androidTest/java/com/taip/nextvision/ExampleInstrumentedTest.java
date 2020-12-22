@@ -49,7 +49,7 @@ public class ExampleInstrumentedTest {
     public void check_battery_percentage() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         BatteryEngine batteryEngine = new BatteryEngine(context);
-        String percent = batteryEngine.execute("baterie");
+        String percent = batteryEngine.execute("battery");
         assertEquals("100", percent);
     }
 
@@ -57,7 +57,7 @@ public class ExampleInstrumentedTest {
     public void check_is_charging() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         BatteryEngine batteryEngine = new BatteryEngine(context);
-        String charge = batteryEngine.execute("incarca");
+        String charge = batteryEngine.execute("charge");
         Log.d("HELLO!!",charge);
         assertEquals("No", charge);
     }
@@ -66,7 +66,7 @@ public class ExampleInstrumentedTest {
     public void check_if_battery_is_saving_mode() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         BatteryEngine batteryEngine = new BatteryEngine(context);
-        String saveMode = batteryEngine.execute("mod baterie");
+        String saveMode = batteryEngine.execute("CheckBatteryMode");
         Log.d("HELLO SAVE MODE!!", saveMode);
         assertEquals("No", saveMode);
     }
