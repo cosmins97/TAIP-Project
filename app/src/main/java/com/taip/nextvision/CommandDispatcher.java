@@ -12,6 +12,8 @@ import com.taip.nextvision.TimeEngine.DateEngine;
 import com.taip.nextvision.TimeEngine.TimeEngine;
 import com.taip.nextvision.directions.DirectionsEngine;
 
+import java.text.Normalizer;
+
 public class CommandDispatcher {
     Context context;
 
@@ -19,9 +21,13 @@ public class CommandDispatcher {
         context = main;
     }
 
-    public void dispatch(String cmd) {
+    public void dispatch(String command) {
         try {
             Buttons.deactivateAll();
+
+            String cmd = Normalizer.normalize(command, Normalizer.Form.NFD)
+                    .replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
+            Toast.makeText(context, cmd, Toast.LENGTH_LONG).show();
 
             CommandEngine commandEngine = new CommandEngine() {
                 @Override
@@ -29,8 +35,8 @@ public class CommandDispatcher {
                     return "Nu am înțeles comanda";
                 }
             };
-            
-            if (cmd.startsWith("suna ") || cmd.startsWith("apeleaza ") || cmd.startsWith("creeaza ")  || cmd.startsWith("adauga ") || cmd.startsWith("salveaza ")) {
+
+            if (cmd.startsWith("suna ") || cmd.startsWith("apeleaza ") || cmd.startsWith("creeaza ") || cmd.startsWith("adauga ") || cmd.startsWith("salveaza ")) {
                 commandEngine = new CallEngine(context);
             } else if (cmd.contains("sms nou")) {
                 commandEngine = new SMSEngine(context);

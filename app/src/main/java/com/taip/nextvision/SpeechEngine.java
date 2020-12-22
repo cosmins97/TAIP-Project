@@ -81,7 +81,11 @@ public class SpeechEngine {
 
             public void onDroidSpeechFinalResult(String finalSpeechResult) {
                 droidSpeech.closeDroidSpeechOperations();
-                mainActivity.commandDispatcher.dispatch(finalSpeechResult);
+                new Thread() {
+                    public void run() {
+                        mainActivity.runOnUiThread(() -> mainActivity.commandDispatcher.dispatch(finalSpeechResult));
+                    }
+                }.start();
             }
 
             @Override
