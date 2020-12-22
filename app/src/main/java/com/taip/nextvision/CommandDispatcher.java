@@ -17,7 +17,7 @@ public class CommandDispatcher {
 
         CommandEngine commandEngine;
         String result = "";
-        if (cmd.equals("suna")) {
+        if (cmd.equals("suna") || cmd.equals("creeaza")) {
             commandEngine = new CallEngine(context);
             result = commandEngine.execute(cmd);
         } else if (cmd.equals("sms")) {
