@@ -11,27 +11,39 @@ import com.taip.nextvision.directions.DirectionsEngine;
 
 public class CommandDispatcher {
     public String dispatch(Context context, String cmd) {
+//        Toast.makeText(context, cmd, Toast.LENGTH_SHORT).show();
+//        SpeechEngine.textToSpeech(cmd);
         Toast.makeText(context, cmd, Toast.LENGTH_SHORT).show();
-        SpeechEngine.textToSpeech(cmd);
+
         CommandEngine commandEngine;
+        String result = "";
         if (cmd.equals("suna")) {
             commandEngine = new CallEngine(context);
+            result = commandEngine.execute(cmd);
         } else if (cmd.equals("sms")) {
             commandEngine = new SMSEngine(context);
+            result = commandEngine.execute(cmd);
         } else if (cmd.equals("directii")) {
             commandEngine = new DirectionsEngine(context);
+            result = commandEngine.execute(cmd);
         } else if (cmd.equals("de la")) {
             commandEngine = new DirectionsEngine(context);
+            result = commandEngine.execute(cmd);
         } else if (cmd.equals("pana la")) {
             commandEngine = new DirectionsEngine(context);
+            result = commandEngine.execute(cmd);
         } else if (cmd.equals("data")) {
             commandEngine = new DateEngine(context);
-        } else if (cmd.equals("timp")) {
+            result = commandEngine.execute(cmd);
+        } else if (cmd.equals("timp") || cmd.equals(("ora"))) {
             commandEngine = new TimeEngine(context);
+            result = commandEngine.execute(cmd);
         } else {
-            return "Nu am inteles comanda";
+            result = "Nu am inteles comanda";
         }
 
-        return commandEngine.execute(cmd);
+        Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
+        SpeechEngine.textToSpeech(result);
+        return "";
     }
 }
