@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.telephony.SmsManager;
+import android.widget.Toast;
 
 import com.taip.nextvision.CommandEngine;
 
@@ -27,100 +28,20 @@ public class SMSEngine implements CommandEngine {
     @Override
     public String execute(String cmd) {
         Telephony telephony = Telephony.getInstance();
-        if (cmd == "find sms") {
-            return this.findSmsBySender("cosmin");
+
+        String[] splitStr;
+        splitStr = cmd.split(" ", 0);
+
+        if (cmd.contains("gaseste sms")) { // gaseste sms nume
+            return this.findSmsBySender(splitStr[2]);
         }
-        else if (cmd == "read last sms") {
+        else if (cmd.contains("citeste ultimul sms")) { // citeste ultimul sms
             return this.readLastSms();
         }
-        else if (cmd == "new sms") {
-            return this.newSms("cosmin", "salut");
+        else if (cmd.contains("sms nou")) { // sms nou nume text
+            return this.newSms(splitStr[2], splitStr[3]);
         }
         return "Nu am inteles comanda";
-    }
-
-    private String findSmsBySender(String name) {
-        String actionResult = null;
-        ArrayList<Sms> smsList = new ArrayList<>();
-        Uri uriSMSURI = Uri.parse("content://sms/inbox");
-        Cursor cursor = this.context.getContentResolver().query(uriSMSURI, null, null, null, null);
-
-        String contactNumber = getContactAddressByName(name);
-
-
-        if(contactNumber == "NotFound") {
-            actionResult = "Acest contact nu a fost gasit.";
-        }
-        else {
-            while (cursor != null && cursor.moveToNext()) {
-                String address = cursor.getString(cursor.getColumnIndex("address"));
-                String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
-
-                if(address == contactNumber) {
-                    smsList.add(new Sms(address, "me", body));
-                }
-
-            }
-
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-
-        return actionResult;
-    }
-
-    private String readLastSms() {
-        Uri uriSMSURI = Uri.parse("content://sms/inbox");
-        Cursor cursor = this.context.getContentResolver().query(uriSMSURI, null, null, null, null);
-
-        ArrayList<Sms> smsList = new ArrayList<>();
-
-        while (cursor != null && cursor.moveToNext()) {
-            String address = cursor.getString(cursor.getColumnIndex("address"));
-            String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
-            smsList.add(new Sms(address, "me", body));
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
-
-        Sms lastSmsReceived = smsList.get(smsList.size() - 1);
-        String smsSender = getContactNameByAddress(lastSmsReceived.getSender());
-        String actionResult = "Ultimul sms a fost primit de la" + smsSender +
-                ". Acesta este: " + lastSmsReceived.getSmsBody();
-
-        return actionResult;
-    }
-
-    private String newSms(String contactName, String smsMessage) {
-//        Sms newSms = new Sms("me", name, text);
-//        smsList.add(newSms);
-
-        String actionResult;
-
-        String contactNumber = getContactAddressByName(contactName);
-
-        //check if the contact was found
-        if(contactNumber == "NotFound") {
-            actionResult = "Contactul " + contactName + " nu a fost gasit.";
-        }
-        else {
-            //intent
-            PendingIntent sentIntent = null, deliveryIntent = null;
-            String scAddress = null;
-
-            //sms manager
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage
-                    (contactNumber, scAddress, smsMessage,
-                            sentIntent, deliveryIntent);
-
-            actionResult = "Mesaj trimis.";
-        }
-
-        return actionResult;
     }
 
     private void getContacts() {
@@ -141,7 +62,7 @@ public class SMSEngine implements CommandEngine {
         //find contact name by number
         if (cursor.moveToFirst()) {
             do {
-                if (cursor.getString(idxNumber).equals(address)) {
+                if (address.contains(cursor.getString(idxNumber))) {
                     contactName = cursor.getString(idxName);
                 }
             } while (cursor.moveToNext());
@@ -179,4 +100,119 @@ public class SMSEngine implements CommandEngine {
             return "NotFound";
         }
     }
+
+    private String findSmsBySender(String name) {
+        String actionResult = null;
+        ArrayList<Sms> smsList = new ArrayList<>();
+        Uri uriSMSURI = Uri.parse("content://sms/inbox");
+        Cursor cursor = this.context.getContentResolver().query(uriSMSURI, null, null, null, null);
+
+        String contactNumber = getContactAddressByName(name);
+
+
+        if(contactNumber == "NotFound") {
+            actionResult = "Acest contact nu a fost gasit.";
+        }
+        else {
+            while (cursor != null && cursor.moveToNext()) {
+                String address = cursor.getString(cursor.getColumnIndex("address"));
+                String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
+
+                if(address.contains(contactNumber)) {
+                    smsList.add(new Sms(address, "me", body));
+                }
+
+            }
+
+            if (cursor != null) {
+                cursor.close();
+            }
+
+            if(smsList.size() == 0)
+            {
+                actionResult = "Nu ati primit niciun sms de la " + name + ".";
+            }
+            else
+            {
+                Sms lastSmsReceived = smsList.get(0);
+                actionResult = "Ultimul mesaj primit de la " + name + " este: " + lastSmsReceived.getSmsBody();
+            }
+        }
+
+        Toast.makeText(context, actionResult, Toast.LENGTH_SHORT).show();
+
+        return actionResult;
+    }
+
+    private String readLastSms() {
+        Uri uriSMSURI = Uri.parse("content://sms/inbox");
+        Cursor cursor = this.context.getContentResolver().query(uriSMSURI, null, null, null, null);
+
+        ArrayList<Sms> smsList = new ArrayList<>();
+
+        while (cursor != null && cursor.moveToNext()) {
+            String address = cursor.getString(cursor.getColumnIndex("address"));
+            String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
+            smsList.add(new Sms(address, "me", body));
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        String actionResult;
+
+        if(smsList.size() == 0)
+        {
+            actionResult = "Nu exista niciun sms.";
+        }
+        else
+        {
+            Sms lastSmsReceived = smsList.get(0);
+            String smsSender = getContactNameByAddress(lastSmsReceived.getSender());
+
+            if(smsSender.equals("NotFound"))
+            {
+                smsSender = lastSmsReceived.getSender();
+            }
+
+            actionResult = "Ultimul sms a fost primit de la " + smsSender +
+                    ". Acesta este: " + lastSmsReceived.getSmsBody();
+        }
+
+        Toast.makeText(context, actionResult, Toast.LENGTH_SHORT).show();
+        return actionResult;
+    }
+
+    private String newSms(String contactName, String smsMessage) {
+//        Sms newSms = new Sms("me", name, text);
+//        smsList.add(newSms);
+
+        String actionResult;
+
+        String contactNumber = getContactAddressByName(contactName);
+
+        //check if the contact was found
+        if(contactNumber == "NotFound") {
+            actionResult = "Contactul " + contactName + " nu a fost gasit.";
+        }
+        else {
+            //intent
+            PendingIntent sentIntent = null, deliveryIntent = null;
+            String scAddress = null;
+
+            //sms manager
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage
+                    (contactNumber, scAddress, smsMessage,
+                            sentIntent, deliveryIntent);
+
+            actionResult = "Mesaj trimis.";
+        }
+
+        Toast.makeText(context, actionResult, Toast.LENGTH_SHORT).show();
+        return actionResult;
+    }
+
+
 }

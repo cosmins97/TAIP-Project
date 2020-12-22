@@ -32,7 +32,11 @@ public class CommandDispatcher {
             
             if (cmd.startsWith("suna ") || cmd.startsWith("apeleaza ") || cmd.startsWith("creeaza ")  || cmd.startsWith("adauga ") || cmd.startsWith("salveaza ")) {
                 commandEngine = new CallEngine(context);
-            } else if (cmd.equals("sms")) {
+            } else if (cmd.contains("sms nou")) {
+                commandEngine = new SMSEngine(context);
+            } else if (cmd.contains("gaseste sms")) {
+                commandEngine = new SMSEngine(context);
+            } else if (cmd.contains("citeste ultimul sms")) {
                 commandEngine = new SMSEngine(context);
             } else if (cmd.equals("directii")) {
                 commandEngine = new DirectionsEngine(context);
