@@ -1,5 +1,6 @@
 package com.taip.nextvision.TelephonyEngine;
 
+import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.Context;
@@ -11,7 +12,7 @@ import com.taip.nextvision.CommandEngine;
 
 import java.util.ArrayList;
 
-public class CallEngine implements CommandEngine {
+public class CallEngine extends Activity implements CommandEngine {
     Context context;
 
     public CallEngine(Context context) {
@@ -20,14 +21,32 @@ public class CallEngine implements CommandEngine {
 
     @Override
     public String execute(String cmd) {
-        Telephony telephony = Telephony.getInstance();
-        if (cmd.equals("suna andra") || cmd.equals("apeleaza andra")) {
+        if (cmd.startsWith("suna ") || cmd.startsWith("apeleaza ")) {
             String[] splited = cmd.split("\\s+");
-            return this.callContact(splited[1]);
+            if (splited.length == 2) {
+                String check = this.callContact(splited[1]);
+                if (check.equals("no"))
+                    return "Contactul nu a fost gasit!";
+                else
+                {
+//                    String[] arr = check.split("\\s+");
+//                    String result = null;
+//                    for (String s : arr)
+//                        result += s + " ";
+//                    result = result.substring(0, result.length()-1);
+//                    Intent callPerson = new Intent(Intent.ACTION_DIAL);
+//                    callPerson.setData(Uri.parse("tel:" + result));
+//                    if (callPerson.resolveActivity(getPackageManager()) != null) {
+//                        startActivity(callPerson);
+//                    }
+                    return check;
+                }
+            }
         }
-        if (cmd.equals("creeaza cristi 07777773")) {
+        if (cmd.startsWith("creeaza ") || cmd.startsWith("adauga ") || cmd.startsWith("salveaza ")) {
             String[] splited = cmd.split("\\s+");
-            return this.createNewContact(splited[1], splited[2]);
+            if (splited.length == 3)
+                return this.createNewContact(splited[1], splited[2]);
         }
         return "Nu am inteles comanda";
     }
@@ -49,23 +68,29 @@ public class CallEngine implements CommandEngine {
         int idxName = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
         int idxNumber = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
 
-        if (mode == "call person")
+        if (mode.equals("call person"))
         {
             if (cursor.moveToFirst()) {
                 do {
                     if (cursor.getString(idxName).equals(check)) {
-                        return cursor.getString(idxNumber);
+                        String result = "0";
+                        String number = cursor.getString(idxNumber);
+                        for (int i = 1; i < number.length(); i++)
+                        {
+                            result += " " + number.charAt(i);
+                        }
+                        return result;
                     }
                 } while (cursor.moveToNext());
             }
             cursor.close();
-            return "Contactul nu a fost gasit";
+            return "no";
         }
 
-        if (mode == "call number")
-            callUnknownNumber(check);
+        if (mode.equals("call number"))
+            return callUnknownNumber(check);
 
-        if (mode == "create name")
+        if (mode.equals("create name"))
         {
             if (cursor.moveToFirst()) {
                 do {
@@ -78,7 +103,7 @@ public class CallEngine implements CommandEngine {
             return "no";
         }
 
-        if (mode == "create number")
+        if (mode.equals("create number"))
         {
             if (cursor.moveToFirst()) {
                 do {
@@ -94,9 +119,9 @@ public class CallEngine implements CommandEngine {
     }
 
     private String createNewContact(String name, String number) {
-        if (checkContactExistence(name, "create name") == "no") {
-            if (checkContactExistence(number, "create number") == "no") {
-                ArrayList<ContentProviderOperation> contact = new ArrayList<ContentProviderOperation>();
+        if (checkContactExistence(name, "create name").equals("no")) {
+            if (checkContactExistence(number, "create number").equals("no")) {
+                ArrayList<ContentProviderOperation> contact = new ArrayList<>();
                 contact.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
                         .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
                         .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
@@ -129,10 +154,10 @@ public class CallEngine implements CommandEngine {
     }
 
     private String callUnknownNumber(String number) {
-        String result = "";
-        for (int i = 0; i < number.length(); i++)
+        String result = "0";
+        for (int i = 1; i < number.length(); i++)
         {
-            result += number.charAt(i) + " ";
+            result += " " + number.charAt(i);
         }
         return result;
     }

@@ -15,7 +15,7 @@ public class CommandDispatcher {
         SpeechEngine.textToSpeech(cmd);
         CommandEngine commandEngine;
         String result = "";
-        if (cmd.equals("suna andra") || cmd.equals("creeaza andra") || cmd.equals("apeleaza cristi 07777773")) {
+        if (cmd.startsWith("suna ") || cmd.startsWith("apeleaza ") || cmd.startsWith("creeaza ")  || cmd.startsWith("adauga ") || cmd.startsWith("salveaza ")) {
             commandEngine = new CallEngine(context);
             result = commandEngine.execute(cmd);
         } else if (cmd.equals("sms")) {
