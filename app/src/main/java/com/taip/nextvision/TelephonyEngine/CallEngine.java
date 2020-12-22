@@ -52,7 +52,7 @@ public class CallEngine extends Activity implements CommandEngine {
     }
 
     private String callContact(String person) {
-        if (person.startsWith("07"))
+        if (person.startsWith("0"))
             return checkContactExistence(person, "call number");
         else
             return checkContactExistence(person, "call person");
