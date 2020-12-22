@@ -16,8 +16,7 @@ public class TimeEngine  implements CommandEngine {
     }
     @Override
     public String execute(String cmd) {
-        DateTime time = DateTime.getInstance();
-        if (cmd == "timp") {
+        if (cmd.equals("timp")) {
             return this.checkHourMin();
         }
         return "Nu e buna comanda de timp";

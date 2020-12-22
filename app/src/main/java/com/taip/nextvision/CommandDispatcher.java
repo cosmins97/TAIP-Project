@@ -14,19 +14,19 @@ public class CommandDispatcher {
         Toast.makeText(context, cmd, Toast.LENGTH_SHORT).show();
         SpeechEngine.textToSpeech(cmd);
         CommandEngine commandEngine;
-        if (cmd == "suna") {
+        if (cmd.equals("suna")) {
             commandEngine = new CallEngine(context);
-        } else if (cmd == "sms") {
+        } else if (cmd.equals("sms")) {
             commandEngine = new SMSEngine(context);
-        } else if (cmd == "directii") {
+        } else if (cmd.equals("directii")) {
             commandEngine = new DirectionsEngine(context);
-        } else if (cmd == "de la") {
+        } else if (cmd.equals("de la")) {
             commandEngine = new DirectionsEngine(context);
-        } else if (cmd == "pana la") {
+        } else if (cmd.equals("pana la")) {
             commandEngine = new DirectionsEngine(context);
-        } else if (cmd == "data") {
+        } else if (cmd.equals("data")) {
             commandEngine = new DateEngine(context);
-        } else if (cmd == "timp") {
+        } else if (cmd.equals("timp")) {
             commandEngine = new TimeEngine(context);
         } else {
             return "Nu am inteles comanda";

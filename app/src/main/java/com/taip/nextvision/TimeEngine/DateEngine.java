@@ -16,7 +16,7 @@ public class DateEngine implements CommandEngine {
     }
     @Override
     public String execute(String cmd) {
-        if (cmd == "data") {
+        if (cmd.equals("data")) {
             return this.checkDate();
         }
         return "Nu e buna comanda de data";
