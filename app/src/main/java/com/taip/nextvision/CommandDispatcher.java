@@ -20,15 +20,16 @@ public class CommandDispatcher {
     }
 
     public void dispatch(String cmd) {
-        Buttons.deactivateAll();
-
-        CommandEngine commandEngine = new CommandEngine() {
-            @Override
-            public String execute(String cmd) {
-                return "Nu am înțeles comanda";
-            }
-        };
         try {
+            Buttons.deactivateAll();
+
+            CommandEngine commandEngine = new CommandEngine() {
+                @Override
+                public String execute(String cmd) {
+                    return "Nu am înțeles comanda";
+                }
+            };
+            
             if (cmd.startsWith("suna ") || cmd.startsWith("apeleaza ") || cmd.startsWith("creeaza ")  || cmd.startsWith("adauga ") || cmd.startsWith("salveaza ")) {
                 commandEngine = new CallEngine(context);
             } else if (cmd.equals("sms")) {
@@ -64,12 +65,12 @@ public class CommandDispatcher {
             } else if (cmd.contains("sterge ultima nota")) {
                 commandEngine = new NotesEngine(context);
             }
+            String result = commandEngine.execute(cmd);
+            Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
+            SpeechEngine.textToSpeech(result);
+
         } catch (Error err) {
             Toast.makeText(context, err.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
-        String result = commandEngine.execute(cmd);
-        Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
-        SpeechEngine.textToSpeech(result);
     }
 }
