@@ -6,19 +6,25 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     DatabaseHelper mDatabaseHelper;
     String[] permissions = {
-            Manifest.permission.RECORD_AUDIO
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.RECEIVE_SMS,
+            Manifest.permission.INTERNET,
+            Manifest.permission.WRITE_CONTACTS,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.CALL_PHONE
     };
 
-    Button buttonTestOn, buttonTestOff, runCommandButton;
+    Button startButton, stopButton, runCommandButton;
     TextView commandInput;
     MediaPlayer testMedia;
+    CommandDispatcher commandDispatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,19 +32,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        buttonTestOn = (Button) findViewById(R.id.micOn);
-        buttonTestOff = (Button) findViewById(R.id.micOff);
-        //testMedia = MediaPlayer.create(this, R.raw.sound);
-
-
         PermissionManager.initInstance(this, permissions);
-        CommandDispatcher commandDispatcher = new CommandDispatcher();
+        commandDispatcher = new CommandDispatcher(this);
         try {
             PermissionManager.getInstance().checkPermission(Manifest.permission.RECORD_AUDIO);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        SpeechEngine.init(this, buttonTestOn, buttonTestOff);
+        SpeechEngine.init(this);
+
+        startButton = (Button) findViewById(R.id.micOn);
+        stopButton = (Button) findViewById(R.id.micOff);
+        Buttons.init(this, startButton, stopButton);
+        //testMedia = MediaPlayer.create(this, R.raw.sound);
 
 
 //        DirectionsEngine mGPS = new DirectionsEngine(this);
@@ -64,23 +70,19 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        buttonTestOn.setOnClickListener(new View.OnClickListener() {
+        startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SpeechEngine.startListening();
+                Buttons.activateListening(true);
                 //testMedia.start();
-                String toSpeak = "Mic is On";
-                Toast.makeText(getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
             }
         });
 
-        buttonTestOff.setOnClickListener(new View.OnClickListener() {
+        stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SpeechEngine.stopListening();
+                Buttons.activateListening(false);
                 //testMedia.start();
-                String toSpeak = "Mic is Off";
-                Toast.makeText(getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -89,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         runCommandButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                commandDispatcher.dispatch(getApplicationContext(), commandInput.getText().toString());
+                commandDispatcher.dispatch(commandInput.getText().toString());
             }
         });
     }

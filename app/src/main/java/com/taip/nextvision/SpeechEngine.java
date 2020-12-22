@@ -1,9 +1,9 @@
 package com.taip.nextvision;
 
 import android.Manifest;
-import android.graphics.Color;
 import android.speech.tts.TextToSpeech;
-import android.widget.Button;
+import android.speech.tts.UtteranceProgressListener;
+
 import android.widget.Toast;
 
 import androidx.annotation.RequiresPermission;
@@ -11,25 +11,21 @@ import androidx.annotation.RequiresPermission;
 import com.vikramezhil.droidspeech.DroidSpeech;
 import com.vikramezhil.droidspeech.OnDSListener;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import hugo.weaving.DebugLog;
-
-public class SpeechEngine implements OnDSListener {
+// https://github.com/vikramezhil/DroidSpeech/blob/master/app/src/main/java/com/vikramezhil/droidspeechexample/Activity_DroidSpeech.java
+public class SpeechEngine {
     static MainActivity mainActivity;
     static TextToSpeech tts;
     static DroidSpeech droidSpeech;
     final static String locale = "ro-RO";
-    static Button start, stop;
+
 
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
-    public static void init(MainActivity mainActivityInput, Button startInput, Button stopInput) {
+    public static void init(MainActivity mainActivityInput) {
         mainActivity = mainActivityInput;
-        start = startInput;
-        stop = stopInput;
-
-        activateListening(false);
 
         tts = new TextToSpeech(mainActivity, new TextToSpeech.OnInitListener() {
             @Override
@@ -40,69 +36,77 @@ public class SpeechEngine implements OnDSListener {
             }
         });
 
+        tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+            @Override
+            public void onStart(String utteranceId) {
+            }
+
+            @Override
+            public void onDone(String utteranceId) {
+                new Thread() {
+                    public void run() {
+                        mainActivity.runOnUiThread(() -> Buttons.restoreStateAfterDeactivation());
+                    }
+                }.start();
+            }
+
+            @Override
+            public void onError(String utteranceId) {
+                new Thread() {
+                    public void run() {
+                        mainActivity.runOnUiThread(() -> Toast.makeText(mainActivity.getBaseContext(), "TTS Error", Toast.LENGTH_SHORT).show());
+                    }
+                }.start();
+            }
+        });
+
         droidSpeech = new DroidSpeech(mainActivity, mainActivity.getFragmentManager());
-        droidSpeech.setOnDroidSpeechListener(null);
+        droidSpeech.setOnDroidSpeechListener(new OnDSListener() {
+            @Override
+            public void onDroidSpeechSupportedLanguages(String currentSpeechLanguage, List<String> supportedSpeechLanguages) {
+                if (supportedSpeechLanguages.contains(locale)) {
+                    droidSpeech.setPreferredLanguage(locale);
+                }
+            }
+
+            @Override
+            public void onDroidSpeechRmsChanged(float rmsChangedValue) {
+
+            }
+
+            @Override
+            public void onDroidSpeechLiveResult(String liveSpeechResult) {
+
+            }
+
+            public void onDroidSpeechFinalResult(String finalSpeechResult) {
+                droidSpeech.closeDroidSpeechOperations();
+                mainActivity.commandDispatcher.dispatch(finalSpeechResult);
+            }
+
+            @Override
+            public void onDroidSpeechClosedByUser() {
+
+            }
+
+            @Override
+            public void onDroidSpeechError(String errorMsg) {
+                Toast.makeText(mainActivity, errorMsg, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
-    @DebugLog
     public static void startListening() {
-        activateListening(true);
         droidSpeech.startDroidSpeechRecognition();
     }
 
     public static void stopListening() {
-        activateListening(false);
         droidSpeech.closeDroidSpeechOperations();
     }
 
-    @DebugLog
     public static void textToSpeech(String text) {
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
-    }
-
-    @Override
-    public void onDroidSpeechSupportedLanguages(String currentSpeechLanguage, List<String> supportedSpeechLanguages) {
-        if (supportedSpeechLanguages.contains(locale)) {
-            droidSpeech.setPreferredLanguage(locale);
-        }
-    }
-
-    @Override
-    public void onDroidSpeechRmsChanged(float rmsChangedValue) {
-
-    }
-
-    @Override
-    public void onDroidSpeechLiveResult(String liveSpeechResult) {
-
-    }
-
-    public void onDroidSpeechFinalResult(String finalSpeechResult) {
-        Toast.makeText(mainActivity, finalSpeechResult, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onDroidSpeechClosedByUser() {
-
-    }
-
-    @Override
-    public void onDroidSpeechError(String errorMsg) {
-        Toast.makeText(mainActivity, errorMsg, Toast.LENGTH_LONG).show();
-    }
-
-    public static void activateListening(Boolean mode) {
-        int color = mainActivity.getColor(R.color.main);
-        if (mode) {
-            start.setClickable(false);
-            stop.setClickable(true);
-            start.setBackgroundColor(Color.GRAY);
-            stop.setBackgroundColor(color);
-        } else {
-            start.setClickable(true);
-            stop.setClickable(false);
-            stop.setBackgroundColor(Color.GRAY);
-            start.setBackgroundColor(color);
-        }
+        HashMap<String, String> params = new HashMap<>();
+        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "text");
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, params);
     }
 }
