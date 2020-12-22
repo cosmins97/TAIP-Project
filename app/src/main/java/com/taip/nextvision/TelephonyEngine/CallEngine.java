@@ -30,9 +30,9 @@ public class CallEngine extends Activity implements CommandEngine {
                 else
                 {
 //                    String[] arr = check.split("\\s+");
-//                    String result = null;
+//                    String result = "";
 //                    for (String s : arr)
-//                        result += s + " ";
+//                        result += s;
 //                    result = result.substring(0, result.length()-1);
 //                    Intent callPerson = new Intent(Intent.ACTION_DIAL);
 //                    callPerson.setData(Uri.parse("tel:" + result));
