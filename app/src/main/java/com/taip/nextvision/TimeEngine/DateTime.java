@@ -9,6 +9,5 @@ public class DateTime {
         return instance;
     }
     private void DateTime() {
-
     }
 }

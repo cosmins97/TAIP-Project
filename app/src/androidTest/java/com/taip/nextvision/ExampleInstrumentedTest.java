@@ -9,6 +9,9 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.taip.nextvision.AlarmEngine.AlarmEngine;
 import com.taip.nextvision.BatteryEngine.BatteryEngine;
 import com.taip.nextvision.TelephonyEngine.CallEngine;
+import com.taip.nextvision.TelephonyEngine.SMSEngine;
+import com.taip.nextvision.TimeEngine.DateEngine;
+import com.taip.nextvision.TimeEngine.TimeEngine;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -101,7 +104,8 @@ public class ExampleInstrumentedTest {
         DateEngine dateEngine = new DateEngine(context);
         String testCmd = "data";
         String date = dateEngine.execute(testCmd);
-        assertEquals("10/11/2020", date);
+        System.out.print(date);
+        assertEquals("22/12/2020", date);
     }
 
     @Test
@@ -113,14 +117,14 @@ public class ExampleInstrumentedTest {
         assertEquals("10/11/2021", date);
     }
 
-//    @Test
-//    //andra
-//    public void testTime(){
-//        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-//        TimeEngine timeEngine = new TimeEngine(context);
-//        String date = timeEngine.execute("time");
-//        //assert();
-//    }
+    @Test
+    //andra
+    public void testTime(){
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        TimeEngine timeEngine = new TimeEngine(context);
+        String date = timeEngine.execute("timp");
+        assertEquals("15:43", date);
+    }
 
     @Test
     public void SMSEngine_newSms_Test(){
