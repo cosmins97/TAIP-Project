@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -27,18 +28,15 @@ public class CallEngine extends Activity implements CommandEngine {
                 String check = this.callContact(splited[1]);
                 if (check.equals("no"))
                     return "Contactul nu a fost gasit!";
-                else
-                {
-//                    String[] arr = check.split("\\s+");
-//                    String result = "";
-//                    for (String s : arr)
-//                        result += s;
-//                    result = result.substring(0, result.length()-1);
-//                    Intent callPerson = new Intent(Intent.ACTION_DIAL);
-//                    callPerson.setData(Uri.parse("tel:" + result));
-//                    if (callPerson.resolveActivity(getPackageManager()) != null) {
-//                        startActivity(callPerson);
-//                    }
+                else {
+                    String[] arr = check.split("\\s+");
+                    String result = "";
+                    for (String s : arr)
+                        result += s;
+                    result = result.substring(0, result.length() - 1);
+                    Uri number = Uri.parse("tel:" + result);
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
+                    context.startActivity(callIntent);
                     return check;
                 }
             }
@@ -58,8 +56,7 @@ public class CallEngine extends Activity implements CommandEngine {
             return checkContactExistence(person, "call person");
     }
 
-    private String checkContactExistence (String check, String mode)
-    {
+    private String checkContactExistence(String check, String mode) {
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
         String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.NUMBER};
@@ -68,15 +65,13 @@ public class CallEngine extends Activity implements CommandEngine {
         int idxName = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
         int idxNumber = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
 
-        if (mode.equals("call person"))
-        {
+        if (mode.equals("call person")) {
             if (cursor.moveToFirst()) {
                 do {
                     if (cursor.getString(idxName).equals(check)) {
                         String result = "0";
                         String number = cursor.getString(idxNumber);
-                        for (int i = 1; i < number.length(); i++)
-                        {
+                        for (int i = 1; i < number.length(); i++) {
                             result += " " + number.charAt(i);
                         }
                         return result;
@@ -90,8 +85,7 @@ public class CallEngine extends Activity implements CommandEngine {
         if (mode.equals("call number"))
             return callUnknownNumber(check);
 
-        if (mode.equals("create name"))
-        {
+        if (mode.equals("create name")) {
             if (cursor.moveToFirst()) {
                 do {
                     if (cursor.getString(idxName).equals(check)) {
@@ -103,8 +97,7 @@ public class CallEngine extends Activity implements CommandEngine {
             return "no";
         }
 
-        if (mode.equals("create number"))
-        {
+        if (mode.equals("create number")) {
             if (cursor.moveToFirst()) {
                 do {
                     if (cursor.getString(idxNumber).equals(check)) {
@@ -155,8 +148,7 @@ public class CallEngine extends Activity implements CommandEngine {
 
     private String callUnknownNumber(String number) {
         String result = "0";
-        for (int i = 1; i < number.length(); i++)
-        {
+        for (int i = 1; i < number.length(); i++) {
             result += " " + number.charAt(i);
         }
         return result;
