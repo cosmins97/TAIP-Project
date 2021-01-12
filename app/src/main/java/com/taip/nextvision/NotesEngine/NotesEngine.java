@@ -34,12 +34,7 @@ public class NotesEngine implements CommandEngine {
         if(cmd.contains("sterge ultima nota")){
             return this.deleteLastNote();
         }
-        if( cmd == "Citeste nota"){
-           // return this.isCharging();
-        }
-        if( cmd == "Sterge nota"){
-            //return this.checkBatteryMode();
-        }
+
         return "Command not valid!";
     }
 
@@ -53,13 +48,15 @@ public class NotesEngine implements CommandEngine {
     public String readAllNotes(){
         Cursor data = mDatabaseHelper.readAllnotes();
         ArrayList<String> listData = new ArrayList<>();
-        // i == 2 --> second column
+        // i == 2 --> second column and data.moveToNext() --> iterator through the result from the sql query
         while(data.moveToNext()){
             listData.add(data.getString(1));
             listData.add(data.getString(2));
             Log.d("Citeste note", data.getString(1));
             Log.d("Citeste note", data.getString(2));
         }
+
+        // forming a returning string to be read by the speech API
         String listString = "";
         for(String s : listData){
             listString += s + '\t';
@@ -71,12 +68,15 @@ public class NotesEngine implements CommandEngine {
     public String readLastNote(){
         Cursor data = mDatabaseHelper.readLastNote();
         ArrayList<String> listData = new ArrayList<>();
+
         // i == 2 --> second column
         listData.add(data.getString(1));
         listData.add(data.getString(2));
         Log.d("Citeste ultima nota", data.getString(1));
         Log.d("Citeste ultima nota", data.getString(2));
         String listString = "";
+
+        // forming a returning string to be read by the speech API
         for(String s : listData){
             listString += s + '\t';
         }
@@ -99,7 +99,7 @@ public class NotesEngine implements CommandEngine {
         mDatabaseHelper.deleteNoteByDate(date);
     }
 
-    public void deleteNoteBynote(String note) {
+    public void deleteNoteByNote(String note) {
         mDatabaseHelper.deleteNoteByNote(note);
     }
 

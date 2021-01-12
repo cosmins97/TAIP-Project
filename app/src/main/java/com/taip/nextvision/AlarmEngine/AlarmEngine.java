@@ -21,54 +21,46 @@ public class AlarmEngine implements CommandEngine {
 
     @Override
     public String execute(String cmd) {
-        if (cmd.contains("seteaza alarma")) {
-            String s = cmd.replace("seteaza alarma ", "");
 
-            String [] arr = s.split("\\s+");
-            String dateString="";
-            String hourString="";
-            String finalDate="";
-            for(int i=0; i<6 ; i++){
-                if(i<3){
-                dateString = dateString + "/" + arr[i] ;}
-                else{hourString = hourString + ":" + arr[i];}
-            }
-            dateString = dateString.substring(1);
-            hourString = hourString.substring(1);
-            finalDate = dateString + " " + hourString;
+        // the input will be like : "<command> day month year hour minutes seconds"
+
+        String parsedCmd = cmd.replaceAll("[a-zA-Z]+ alarma ", "");
+        String [] arr = parsedCmd.split("\\s+");
+        String dateString="";
+        String hourString="";
+        String finalDateAndHour="";
+
+        // need to convert to specific format like: day/month/year hour:minutes:seconds to apply methods from Date library
+        for(int wordIndex=0; wordIndex<6 ; wordIndex++){
+            if(wordIndex<3){
+                dateString = dateString + "/" + arr[wordIndex] ;}
+            else{hourString = hourString + ":" + arr[wordIndex];}
+        }
+        dateString = dateString.substring(1);
+        hourString = hourString.substring(1);
+        finalDateAndHour = dateString + " " + hourString;
+
+        if (cmd.contains("seteaza alarma")) {
+
             SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date date;
             try {
-                date = format1.parse(finalDate);
-                return this.setAlarm(date);
+                date = format1.parse(finalDateAndHour);
+                return this.setAlarmFromSpecificDate(date);
             }
             catch (Exception e) {
                 System.out.println(e.toString());
             }
-//            return this.setAlarm(date);
+
         }
 
         if(cmd.contains("sterge alarma")){
 
-            String s = cmd.replace("sterge alarma ", "");
-
-            String [] arr = s.split("\\s+");
-            String dateString="";
-            String hourString="";
-            String finalDate="";
-            for(int i=0; i<6 ; i++){
-                if(i<3){
-                    dateString = dateString + "/" + arr[i] ;}
-                else{hourString = hourString + ":" + arr[i];}
-            }
-            dateString = dateString.substring(1);
-            hourString = hourString.substring(1);
-            finalDate = dateString + " " + hourString;
             SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date date;
             try {
-                date = format1.parse(finalDate);
-                return this.deleteAlarm(date);
+                date = format1.parse(finalDateAndHour);
+                return this.deleteAlarmFromSpecificDate(date);
             }
             catch (Exception e) {
                 System.out.println(e.toString());
@@ -77,25 +69,11 @@ public class AlarmEngine implements CommandEngine {
 
         if(cmd.contains("exista alarma")){
 
-            String s = cmd.replace("exista alarma ", "");
-
-            String [] arr = s.split("\\s+");
-            String dateString="";
-            String hourString="";
-            String finalDate="";
-            for(int i=0; i<6 ; i++){
-                if(i<3){
-                    dateString = dateString + "/" + arr[i] ;}
-                else{hourString = hourString + ":" + arr[i];}
-            }
-            dateString = dateString.substring(1);
-            hourString = hourString.substring(1);
-            finalDate = dateString + " " + hourString;
             SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             Date date;
             try {
-                date = format1.parse(finalDate);
-                return this.existAlarm(date);
+                date = format1.parse(finalDateAndHour);
+                return this.verifyIfAlarmFromSpecificDateExists(date);
             }
             catch (Exception e) {
                 System.out.println(e.toString());
@@ -105,9 +83,7 @@ public class AlarmEngine implements CommandEngine {
         return "Command not valid!";
     }
 
-    public String setAlarm(Date date){
-
-//        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    public String setAlarmFromSpecificDate(Date date){
 
         Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
         Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
@@ -117,23 +93,11 @@ public class AlarmEngine implements CommandEngine {
         intent.putExtra(AlarmClock.EXTRA_MINUTES, calendar.get(Calendar.MINUTE));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         this.context.startActivity(intent);
-//        intent.putExtra("ALERT_TIME", date);
-//        intent.putExtra("ID_ALERT", 0);
-//        intent.putExtra("TITLE", "title");
-//        intent.putExtra("GEO_LOC", 0);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-//                0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(date);
-//        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-//
-//        Log.d("ADD ALERT", "DONE");
 
         return "Created";
     }
 
-    public String deleteAlarm(Date date) {
+    public String deleteAlarmFromSpecificDate(Date date) {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
@@ -151,7 +115,7 @@ public class AlarmEngine implements CommandEngine {
         return "Deleted";
     }
 
-    public String existAlarm(Date date) {
+    public String verifyIfAlarmFromSpecificDateExists(Date date) {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
@@ -162,8 +126,8 @@ public class AlarmEngine implements CommandEngine {
         intent.putExtra("GEO_LOC", 0);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        boolean rasp = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null;
-        if(rasp){
+        boolean response = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null;
+        if(response){
             return "Exista";
         }
         else{

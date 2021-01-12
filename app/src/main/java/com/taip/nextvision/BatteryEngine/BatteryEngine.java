@@ -22,10 +22,10 @@ public class BatteryEngine implements CommandEngine {
             return this.checkBatteryPercentage();
         }
         if( cmd.equals("incarca")){
-            return this.isCharging();
+            return this.checkIfPhoneisCharging();
         }
         if( cmd.equals("mod economisire")){
-            return this.checkBatteryMode();
+            return this.checkBatteryModePercentage();
         }
         return "Command not valid!";
     }
@@ -52,7 +52,7 @@ public class BatteryEngine implements CommandEngine {
         }
     }
 
-    public String isCharging(){
+    public String checkIfPhoneisCharging(){
         boolean isCharging;
 
         IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
@@ -69,7 +69,7 @@ public class BatteryEngine implements CommandEngine {
             return "No";
         }
     }
-    public String checkBatteryMode(){
+    public String checkBatteryModePercentage(){
 
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         if(powerManager.isPowerSaveMode() == false){
