@@ -19,16 +19,14 @@ public class DateEngine implements CommandEngine {
         if (cmd.equals("data")) {
             return this.checkDate();
         }
-        return "Nu e buna comanda de data";
+        return "Nu este buna comanda de data";
     }
 
     public String checkDate(){
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date currentDate = Calendar.getInstance().getTime();
-        String getDate = "";
+        String getDate;
         getDate = dateFormat.format(currentDate);
-
-        System.out.print(getDate);
         return getDate;
     }
 }

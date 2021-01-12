@@ -2,7 +2,6 @@ package com.taip.nextvision.TelephonyEngine;
 
 import android.app.Activity;
 import android.content.ContentProviderOperation;
-import android.content.ContentProviderResult;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -30,10 +29,10 @@ public class CallEngine extends Activity implements CommandEngine {
                     return "Contactul nu a fost gasit!";
                 else {
                     String[] arr = check.split("\\s+");
-                    String result = "";
+                    StringBuilder result = new StringBuilder();
                     for (String s : arr)
-                        result += s;
-                    result = result.substring(0, result.length() - 1);
+                        result.append(s);
+                    result = new StringBuilder(result.substring(0, result.length() - 1));
                     Uri number = Uri.parse("tel:" + result);
                     Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
                     context.startActivity(callIntent);
@@ -69,12 +68,12 @@ public class CallEngine extends Activity implements CommandEngine {
             if (cursor.moveToFirst()) {
                 do {
                     if (cursor.getString(idxName).equals(check)) {
-                        String result = "0";
+                        StringBuilder result = new StringBuilder("0");
                         String number = cursor.getString(idxNumber);
                         for (int i = 1; i < number.length(); i++) {
-                            result += " " + number.charAt(i);
+                            result.append(" ").append(number.charAt(i));
                         }
-                        return result;
+                        return result.toString();
                     }
                 } while (cursor.moveToNext());
             }
@@ -134,7 +133,7 @@ public class CallEngine extends Activity implements CommandEngine {
                         .build());
 
                 try {
-                    ContentProviderResult[] results = this.context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, contact);
+                    this.context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, contact);
                     return "Numarul a fost salvat";
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -147,10 +146,10 @@ public class CallEngine extends Activity implements CommandEngine {
     }
 
     private String callUnknownNumber(String number) {
-        String result = "0";
+        StringBuilder result = new StringBuilder("0");
         for (int i = 1; i < number.length(); i++) {
-            result += " " + number.charAt(i);
+            result.append(" ").append(number.charAt(i));
         }
-        return result;
+        return result.toString();
     }
 }

@@ -11,13 +11,9 @@ import android.widget.Toast;
 import com.taip.nextvision.CommandEngine;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SMSEngine implements CommandEngine {
-    private Context context;
-
-    private Uri uri;
-    private String[] projection;
+    private final Context context;
     private Cursor cursor;
 
     public SMSEngine(Context context){
@@ -27,8 +23,6 @@ public class SMSEngine implements CommandEngine {
 
     @Override
     public String execute(String cmd) {
-        Telephony telephony = Telephony.getInstance();
-
         String[] splitStr;
         splitStr = cmd.split(" ", 0);
 
@@ -46,8 +40,8 @@ public class SMSEngine implements CommandEngine {
 
     private void getContacts() {
         //contacts
-        uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-        projection = new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.NUMBER};
 
         cursor = this.context.getContentResolver().query(uri, projection, null, null, null);
@@ -102,7 +96,7 @@ public class SMSEngine implements CommandEngine {
     }
 
     private String findSmsBySender(String name) {
-        String actionResult = null;
+        String actionResult;
         ArrayList<Sms> smsList = new ArrayList<>();
         Uri uriSMSURI = Uri.parse("content://sms/inbox");
         Cursor cursor = this.context.getContentResolver().query(uriSMSURI, null, null, null, null);
@@ -110,7 +104,7 @@ public class SMSEngine implements CommandEngine {
         String contactNumber = getContactAddressByName(name);
 
 
-        if(contactNumber == "NotFound") {
+        if(contactNumber.equals("NotFound")) {
             actionResult = "Acest contact nu a fost gasit.";
         }
         else {
@@ -119,7 +113,7 @@ public class SMSEngine implements CommandEngine {
                 String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
 
                 if(address.contains(contactNumber)) {
-                    smsList.add(new Sms(address, "me", body));
+                    smsList.add(new Sms(address, body));
                 }
 
             }
@@ -153,7 +147,7 @@ public class SMSEngine implements CommandEngine {
         while (cursor != null && cursor.moveToNext()) {
             String address = cursor.getString(cursor.getColumnIndex("address"));
             String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
-            smsList.add(new Sms(address, "me", body));
+            smsList.add(new Sms(address, body));
         }
 
         if (cursor != null) {
@@ -193,7 +187,7 @@ public class SMSEngine implements CommandEngine {
         String contactNumber = getContactAddressByName(contactName);
 
         //check if the contact was found
-        if(contactNumber == "NotFound") {
+        if(contactNumber.equals("NotFound")) {
             actionResult = "Contactul " + contactName + " nu a fost gasit.";
         }
         else {

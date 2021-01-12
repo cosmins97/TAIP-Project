@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.taip.nextvision.CommandEngine;
-import com.taip.nextvision.soundControl.SoundControl;
 
 public class DirectionsEngine implements CommandEngine, LocationListener {
 
@@ -32,8 +31,6 @@ public class DirectionsEngine implements CommandEngine, LocationListener {
 
     // Declaring a Location Manager
     protected LocationManager locationManager;
-
-    SoundControl obj = new SoundControl();
 
     public DirectionsEngine (Context context) {
         this.myContext = context;
