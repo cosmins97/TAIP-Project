@@ -138,7 +138,8 @@ public class SMSEngine implements CommandEngine {
         return actionResult;
     }
 
-    private String readLastSms() {
+    private ArrayList<Sms> getAllSms()
+    {
         Uri uriSMSURI = Uri.parse("content://sms/inbox");
         Cursor cursor = this.context.getContentResolver().query(uriSMSURI, null, null, null, null);
 
@@ -153,6 +154,12 @@ public class SMSEngine implements CommandEngine {
         if (cursor != null) {
             cursor.close();
         }
+
+        return smsList;
+    }
+
+    private String readLastSms() {
+        ArrayList<Sms> smsList = getAllSms();
 
         String actionResult;
 
@@ -178,6 +185,19 @@ public class SMSEngine implements CommandEngine {
         return actionResult;
     }
 
+    private void sendSms(String contactNumber, String smsMessage)
+    {
+        //intent
+        PendingIntent sentIntent = null, deliveryIntent = null;
+        String scAddress = null;
+
+        //sms manager
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage
+                (contactNumber, scAddress, smsMessage,
+                        sentIntent, deliveryIntent);
+    }
+
     private String newSms(String contactName, String smsMessage) {
 //        Sms newSms = new Sms("me", name, text);
 //        smsList.add(newSms);
@@ -191,15 +211,7 @@ public class SMSEngine implements CommandEngine {
             actionResult = "Contactul " + contactName + " nu a fost gasit.";
         }
         else {
-            //intent
-            PendingIntent sentIntent = null, deliveryIntent = null;
-            String scAddress = null;
-
-            //sms manager
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage
-                    (contactNumber, scAddress, smsMessage,
-                            sentIntent, deliveryIntent);
+            sendSms(contactNumber, smsMessage);
 
             actionResult = "Mesaj trimis.";
         }
