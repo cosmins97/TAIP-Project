@@ -28,7 +28,7 @@ public class CommandDispatcher {
 
             String cmd = Normalizer.normalize(command, Normalizer.Form.NFD)
                     .replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
-            Toast.makeText(context, cmd, Toast.LENGTH_LONG).show();
+//            Toast.makeText(context, cmd, Toast.LENGTH_LONG).show();
 
             CommandEngine commandEngine = new CommandEngine() {
                 @Override

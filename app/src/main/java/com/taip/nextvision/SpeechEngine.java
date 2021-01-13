@@ -61,11 +61,13 @@ public class SpeechEngine {
         });
 
         droidSpeech = new DroidSpeech(mainActivity, mainActivity.getFragmentManager());
+        droidSpeech.setContinuousSpeechRecognition(false);
         droidSpeech.setOnDroidSpeechListener(new OnDSListener() {
             @Override
             public void onDroidSpeechSupportedLanguages(String currentSpeechLanguage, List<String> supportedSpeechLanguages) {
                 if (supportedSpeechLanguages.contains(locale)) {
                     droidSpeech.setPreferredLanguage(locale);
+//                    droidSpeech.setOfflineSpeechRecognition(true);
                 }
             }
 
